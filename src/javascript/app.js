@@ -1,4 +1,4 @@
-import { createFighters } from './components/fightersView';
+import FightersView, { createFighters } from './components/fightersView';
 import { fighterService } from './services/fightersService';
 
 class App {
@@ -10,9 +10,9 @@ class App {
       App.loadingElement.style.visibility = 'visible';
 
       const fighters = await fighterService.getFighters();
-      const fightersElement = createFighters(fighters);
+      const FightersView = new FightersView(fighters);
 
-      App.rootElement.appendChild(fightersElement);
+      App.rootElement.appendChild(FightersView.element);
     } catch (error) {
       console.warn(error);
       App.rootElement.innerText = 'Failed to load data';

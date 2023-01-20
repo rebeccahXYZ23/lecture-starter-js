@@ -1,21 +1,18 @@
 import { callApi } from '../helpers/apiHelper';
 
-class FighterService {
-  #endpoint = 'fighters.json';
 
-  async getFighters() {
+class FighterService {
+  #endpoint = 'repos/oleksandr-danylchenko/street-fighter/contents/resources/api/fighters.json'
+ 
+async getFighters() {
     try {
-      const apiResult = await callApi(this.#endpoint);
-      return apiResult;
+      const apiResult = await callApi(this.#endpoint, 'GET');
+      return JSON.parse(atob(apiResult.content));
     } catch (error) {
       throw error;
     }
   }
+ }
 
-  async getFighterDetails(id) {
-    // todo: implement this method
-    // endpoint - `details/fighter/${id}.json`;
-  }
-}
+ export const fighterService = new FighterService();
 
-export const fighterService = new FighterService();

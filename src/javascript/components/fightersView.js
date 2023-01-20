@@ -1,42 +1,36 @@
-import { createElement } from '../helpers/domHelper';
-import { createFightersSelector } from './fighterSelector';
+import View from "./view";
+import FighterView from "./fighterView";
 
-export function createFighters(fighters) {
-  const selectFighter = createFightersSelector();
-  const container = createElement({ tagName: 'div', className: 'fighters___root' });
-  const preview = createElement({ tagName: 'div', className: 'preview-container___root' });
-  const fightersList = createElement({ tagName: 'div', className: 'fighters___list' });
-  const fighterElements = fighters.map((fighter) => createFighter(fighter, selectFighter));
+class FightersView extends View {
+  fightersDetailsMap = new Map();
 
-  fightersList.append(...fighterElements);
-  container.append(preview, fightersList);
+  constructor(fighters) {
+    super();
 
-  return container;
+    this.createFighters(fighters);
+    this.handleClick = this.handleFighterClick.bind(this);
+  }
+
+  createFighters(fighters) {
+    const fighterElements = fighters.map(fighter => {
+
+      // Class function with context
+      const fighterView = new FighterView(fighter, this.handleClick);
+
+      return fighterView.element;
+    });
+
+    // ..
+
+    this.element = this.createElement({ tagName: 'div', className: 'fighters' });
+    this.element.append(...fighterElements);
+  }
+
+  handleFighterClick(event, fighter) {
+    this.fightersDetailsMap.set(fighter._id, fighter);
+    console.log('clicked')
+
+  }
 }
 
-function createFighter(fighter, selectFighter) {
-  const fighterElement = createElement({ tagName: 'div', className: 'fighters___fighter' });
-  const imageElement = createImage(fighter);
-  const onClick = (event) => selectFighter(event, fighter._id);
-
-  fighterElement.append(imageElement);
-  fighterElement.addEventListener('click', onClick, false);
-
-  return fighterElement;
-}
-
-function createImage(fighter) {
-  const { source, name } = fighter;
-  const attributes = { 
-    src: source,
-    title: name,
-    alt: name, 
-  };
-  const imgElement = createElement({
-    tagName: 'img',
-    className: 'fighter___fighter-image',
-    attributes
-  });
-
-  return imgElement;
-}
+export default FightersView;
